@@ -1,39 +1,33 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
+[RequireComponent(typeof(CharacterController))]
 public class PlayerMovement : MonoBehaviour
 {
+    public float speed = 2;
 
-    public InputAction movementAction;
     public CharacterController controller;
 
-    private void OnEnable()
-    {
-        movementAction.Enable();
-    }
+    float moveHorizontal;
+    float moveVertical;
 
-    private void OnDisable()
-    {
-        movementAction.Disable();
-    }
-
-    // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
         controller = GetComponent<CharacterController>();
     }
 
-    // Update is called once per frame
-    void Update()
+    public void OnMoveInput(float horizontal, float vertical) 
     {
-        Vector2 inputVector = movementAction.ReadValue<Vector2>();
+        moveHorizontal = horizontal;
+        moveVertical = vertical;
 
-        Vector3 finalVector = new Vector3(inputVector.x, 0, inputVector.y);
+        Debug.Log($"Move Input: {moveVertical} {moveHorizontal}");
+    }
 
-        Debug.Log(movementAction.ReadValue<Vector2>().ToString());
-
-        controller.Move(finalVector * Time.deltaTime * 3);
+    // Start is called before the first frame update
+    private void Update()
+    {
+        controller.Move(new Vector3(moveHorizontal, 0, moveVertical) * Time.deltaTime * speed);
     }
 }
